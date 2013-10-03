@@ -10,6 +10,7 @@ public class koppi_ : PhysicsGame
 {
     IntMeter pistelaskuri;
     IntMeter elamalaskuri;
+    IntMeter laskuri;
     int level = 1;
     int omenoitailmassa = 1;
 
@@ -17,6 +18,7 @@ public class koppi_ : PhysicsGame
     {
         LuoPisteLaskuri();
         Luoelamalaskuri();
+        Luolaskuri();
         uusiomena(level);
 
 
@@ -35,12 +37,21 @@ public class koppi_ : PhysicsGame
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
     }
-    void Omenaa(PhysicsObject klikattuOmena)
+    void klikattuomenaa(PhysicsObject klikattuOmena)
+    {      
+        if (klikattuOmena.Color == Color.Red)
+            klikattuOmena.Destroy();
+            pistelaskuri.AddValue(100);
+            omenoitailmassa = omenoitailmassa - 1;
+            tarkistaonkokaikkikiinni();
+    }
+    void tarkistaonkokaikkikiinni()
     {
-        klikattuOmena.Destroy();
-        pistelaskuri.AddValue(100);
-        omenoitailmassa = omenoitailmassa - 1;
-
+        if (omenoitailmassa == 0)
+        {
+            laskuri.AddValue(1);
+            uusiomena(laskuri.Value);
+        }
     }
 
     void uusiomena(int level)
@@ -58,13 +69,14 @@ public class koppi_ : PhysicsGame
             lehti.Y = 30;
             omena.Add(lehti);
             Mouse.ListenOn(omena, MouseButton.Left,
-                ButtonState.Pressed, Omenaa,
+                ButtonState.Pressed, klikattuomenaa,
                 "Omenaa Klikattu", omena);
             Keyboard.Listen(Key.R, ButtonState.Pressed, Nollaa, "nollaa");
 
             omena.Hit(RandomGen.NextVector(50, 100));
             
         }
+        omenoitailmassa = level;
          
     }
 
@@ -100,9 +112,9 @@ public class koppi_ : PhysicsGame
         {
             elamalaskuri.AddValue(-1);
             omena.Color = Color.Black;
-            omenoitailmassa = omenoitailmassa -1;
-        }
+            omenoitailmassa = omenoitailmassa - 1;
 
+        }
         omena.Color = Color.Black;
     }
    void Luoelamalaskuri()
@@ -114,6 +126,16 @@ public class koppi_ : PhysicsGame
        elamanaytto.X = Screen.Right - 50.0;
        elamanaytto.Y = Screen.Top - 50.0;
        Add(elamanaytto);
+   }
+   void Luolaskuri()
+   {
+       laskuri = new IntMeter(1, 1, 7);
+
+       Label naytto = new Label();
+       naytto.BindTo(elamalaskuri);
+       naytto.X = Screen.Right - 50.0;
+       naytto.Y = Screen.Top - 50.0;
+       Add(naytto);
    }
 
 }
