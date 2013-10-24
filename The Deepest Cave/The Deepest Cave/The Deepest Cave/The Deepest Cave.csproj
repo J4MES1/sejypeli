@@ -119,6 +119,7 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="TextFile1.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\The_Deepest_CaveContent\The_Deepest_CaveContent.contentproj">
