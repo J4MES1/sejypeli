@@ -8,30 +8,32 @@ using Jypeli.Widgets;
 
 public class The_Deepest_Cave : PhysicsGame
 {
+    Image Huone1 = LoadImage("Huone1");
+    Image maa = LoadImage("maa");
     public override void Begin()
+        //TODO: selvitä miksei toi toimi...
     {
-
-
+        luohuone();
       
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
     }
-        void huone()
+        void luohuone()
     {
-        ColorTileMap Aloitushuone = ColorTileMap.FromLevelAsset("kentta1");
+        ColorTileMap Aloitus = ColorTileMap.FromLevelAsset("Huone1");
 
-        Aloitushuone.SetTileMethod(Color.BrightGreen, pelaaja1);
-        Aloitushuone.SetTileMethod(Color.Cyan, pelaaja2);
-        Aloitushuone.SetTileMethod(Color.Gray, Luotaso);
+        Aloitus.SetTileMethod(Color.Blue, pelaaja1);
+        Aloitus.SetTileMethod(Color.Azure, pelaaja2);
+        Aloitus.SetTileMethod(Color.Black, Luohuone1);
 
-        Aloitushuone.Execute(20, 20);
+        Aloitus.Execute(20, 20);
     }
-    void pelaaja1(Vector Aloitushuone, double X, double Y)
+        void pelaaja1(Vector Aloitus, double leveys, double korkeus)
     {
         PhysicsObject pelaaja = new PhysicsObject(100, 100);
         pelaaja.Shape = Shape.Circle;
         pelaaja.Color = Color.Red;
-        pelaaja.X = pelaaja.X + 300;
+        pelaaja.Position = Aloitus;
         Add(pelaaja);
 
         Keyboard.Listen(Key.A, ButtonState.Down, pelaaja.Push, null, new Vector(-1000, 0));
@@ -44,12 +46,12 @@ public class The_Deepest_Cave : PhysicsGame
         Keyboard.Listen(Key.D, ButtonState.Released, pelaaja.Stop, null);
  
     }
-    void pelaaja2(Vector Aloitushuone, double X, double Y)
+    void pelaaja2(Vector Aloitus, double leveys, double korkeus)
     {
     PhysicsObject pelaaja2 = new PhysicsObject(80, 80);
     pelaaja2.Shape = Shape.Circle;
     pelaaja2.Color = Color.Blue;
-    pelaaja2.X = pelaaja2.X - 300;
+    pelaaja2.Position = Aloitus;
     Add(pelaaja2);
 
     Keyboard.Listen(Key.Left, ButtonState.Down, pelaaja2.Push, null, new Vector(-1000, 0));
@@ -62,11 +64,11 @@ public class The_Deepest_Cave : PhysicsGame
     Keyboard.Listen(Key.Right, ButtonState.Released, pelaaja2.Stop, null);
  
     }
-    void Luotaso(double X, double Y)
+    void Luohuone1(Vector Aloitus, double leveys, double korkeus)
     {
         PhysicsObject taso = PhysicsObject.CreateStaticObject(20, 20);
-        taso.Position = 20, 20;
-        taso.Image = groundImage;
+        taso.Position = Aloitus;
+        taso.Image = maa;
         taso.CollisionIgnoreGroup = 1;
         Add(taso);
     }
