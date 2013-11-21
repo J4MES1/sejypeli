@@ -12,7 +12,8 @@ public class TheDeepestCave : PhysicsGame
     PhysicsObject pelaaja;
     PhysicsObject ammus;
     private Image[] jelokavelee = LoadImages("jelo1", "jelo2");
-    vihollinen vihu;
+    PhysicsObject vihu;
+    IntMeter elamat;
 
     Image taustakuva = LoadImage("tausta");
     Image reunat1 = LoadImage("maa");
@@ -25,11 +26,11 @@ public class TheDeepestCave : PhysicsGame
         Level.Background.TileToLevel();
         LuoHuone();
         tykki();
-        //tormays();
-        //Viholliset();
+        tormays();
+        Viholliset();
 
 
-
+        
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
     }
@@ -67,7 +68,7 @@ public class TheDeepestCave : PhysicsGame
         Keyboard.Listen(Key.S, ButtonState.Released, pelaaja.Stop, null);
         Keyboard.Listen(Key.D, ButtonState.Released, pelaaja.Stop, null);
         Keyboard.Listen(Key.A, ButtonState.Released, pelaaja.Stop, null);
-    }
+    }   
   
     
     //void pelaaja2(Vector paikka, double leveys, double korkeus)
@@ -101,6 +102,27 @@ public class TheDeepestCave : PhysicsGame
         reunat.CollisionIgnoreGroup = 1;
         Add(reunat);
     }
+    void elamat1()
+    {
+        elamat = new IntMeter(3);
+        elamat.Value = 3;
+        AddCollisionHandler(ammus, vihu, CollisionHandler.AddMeterValue(elamat, -1));
+        elamat.MinValue = 0;
+        elamat.LowerLimit += vihollisenelamat;
+        
+
+    }
+     void vihollisenelamat()
+    {
+        //elamalaskuri = new IntMeter(vihunterveys);
+
+        //AddCollisionHandler(ammus, "vihu", CollisionHandler.AddMeterValue(elamalaskuri, -1));
+
+
+       // vihunterveys--;
+        //if (vihunterveys <= 0)
+            vihu.Destroy();
+    }
     void tykki()
     {
         pelaajan1ase = new PlasmaCannon(20, 5);
@@ -125,7 +147,7 @@ public class TheDeepestCave : PhysicsGame
         Vector suunta = (Mouse.PositionOnWorld - pelaaja.AbsolutePosition).Normalize();
         pelaajan1ase.Angle = suunta.Angle;
     }
-    void Ammusosui(PhysicsObject ammus, PhysicsObject vihollinen)
+    void Ammusosui(PhysicsObject ammus, PhysicsObject vihu)
     {
         ammus.Destroy();
     }
@@ -137,32 +159,34 @@ public class TheDeepestCave : PhysicsGame
             ammus.Size *= 3;
         }
     }
-    class vihollinen : PhysicsObject
-    {
-        private IntMeter elamalaskuri = new IntMeter(3, 0, 3);
-        public IntMeter Elamalaskuri { get { return elamalaskuri; } }
 
-        public vihollinen(double leveys, double korkeus)
-            : base(leveys, korkeus)
-        {
-            elamalaskuri.LowerLimit += delegate { this.Destroy(); };
-        }
-    }
-    void tormays(IntMeter Elamalaskuri)
+    void tormays()
     {
-        AddCollisionHandler(ammus, "haahaa", CollisionHandler.AddMeterValue(Elamalaskuri, -1));
+        //AddCollisionHandler(ammus, vihu, kuolema);
     }
     
-    void Viholliset(IntMeter elamalaskuri)
+    void Viholliset()
     {
-        vihu = new vihollinen(50, 50);
+        vihu = new PhysicsObject(50, 50);
         vihu.Shape = Shape.Circle;
         vihu.X = RandomGen.NextInt(-300, 300);
         vihu.Y = RandomGen.NextInt(-300, 300);
 
-        vihu.Elamalaskuri.Value--;
         Add(vihu);
 
-    }
 
+    }
+   // void kuolema(PhysicsObject ammus, PhysicsObject vihu)
+    //{//}
+    //class vihollinen : PhysicsObject
+    //{
+    //  private IntMeter elamalaskuri = new IntMeter(3, 0, 3);
+    //public IntMeter Elamalaskuri { get { return elamalaskuri; } }
+
+    //public vihollinen(double leveys, double korkeus)
+    //  : base(leveys, korkeus)
+    //{
+    //  elamalaskuri.LowerLimit += delegate { this.Destroy(); };
+    //}
+    //}
 }
